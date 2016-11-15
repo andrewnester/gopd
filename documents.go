@@ -89,8 +89,20 @@ type DocumentError struct {
 	Detail map[string][]string `json:"detail"`
 }
 
+type DocumentStatus struct {
+	Name         string `json:"name"`
+	UUID         string `json:"uuid"`
+	Status       string `json:"status"`
+	DateCreated  string `json:"date_created"`
+	DateModified string `json:"date_modified"`
+}
+
 func (e DocumentError) Error() string {
-	return e.Type
+	err := e.Type
+	for _, val := range e.Detail {
+		err = fmt.Sprintf("%s; %s", err, val)
+	}
+	return err
 }
 
 func (d TemplateDocument) Create(accessToken string) (*Response, error) {
@@ -129,4 +141,35 @@ func (d TemplateDocument) Create(accessToken string) (*Response, error) {
 
 func (d PdfDocument) Create() {
 
+}
+
+func GetDocumentStatus(accessToken string, docId string) (*DocumentStatus, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", DOCUMENT_API_ENDPOINT, docId), nil)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Status != "200 OK" {
+		var respErr DocumentError
+		_ = json.Unmarshal(body, &respErr)
+		return nil, respErr
+	}
+
+	var status DocumentStatus
+	err = json.Unmarshal(body, &status)
+	if err != nil {
+		return nil, err
+	}
+
+	return &status, nil
 }

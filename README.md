@@ -2,6 +2,8 @@
 
 See API reference here: https://developers.pandadoc.com
 
+[![Build Status](https://travis-ci.org/andrewnester/gopd.svg?branch=master)](https://travis-ci.org/andrewnester/gopd)
+
 ## Examples
 ### Authenticate
 ```

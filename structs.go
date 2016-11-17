@@ -135,9 +135,33 @@ type Role struct {
 	PreassignedPerson User `json:"preassigned_person,omitempty"`
 }
 
+type TemplateAssignee struct {
+	Id                string `json:"id"`
+	Type              string `json:"type"`
+	Name              string `json:"name"`
+	PreassignedPerson User `json:"preassigned_person,omitempty"`
+}
+
+type TemplateField struct {
+	UUID       string `json:"uuid"`
+	Name       string `json:"name"`
+	Title      string `json:"title"`
+	Value      interface{} `json:"value"`
+	AssignedTo TemplateAssignee `json:"assigned_to"`
+}
+
 type Template struct {
-	Document
-	Roles []Role `json:"roles"`
+	Id           string `json:"id"`
+	Name         string `json:"name"`
+	DateCreated  string `json:"date_created"`
+	DateModified string `json:"date_modified"`
+	CreatedBy    User `json:"created_by"`
+	Metadata     map[string]string `json:"metadata,omitempty"`
+	Tokens       []Token `json:"tokens,omitempty"`
+	Fields       []TemplateField `json:"fields,omitempty"`
+	Pricing      Pricing `json:"pricing,omitempty"`
+	Tags         []string `json:"tags"`
+	Roles        []Role `json:"roles"`
 }
 
 // Short version of template data shown in template list

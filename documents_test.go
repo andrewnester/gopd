@@ -9,11 +9,13 @@ import (
 	"encoding/json"
 	"net/http"
 	"bytes"
+	"strings"
 )
 
 func TestFromTemplateDocument_Create(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
+	setTestToken()
 
 	create, _ := ioutil.ReadFile("./fixtures/documents/create.json")
 	created, _ := ioutil.ReadFile("./fixtures/documents/created.json")
@@ -35,6 +37,8 @@ func TestFromTemplateDocument_Create(t *testing.T) {
 				t.Error(err)
 			}
 			jsonStr, _ := json.Marshal(doc)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
 			a.Equal(string(buffer.Bytes()[:]), string(jsonStr[:]))
 
 			resp := httpmock.NewBytesResponse(201, created)
@@ -85,12 +89,18 @@ func TestFromTemplateDocument_Create(t *testing.T) {
 func TestGetDocumentDetails(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
+	setTestToken()
 
 	file, _ := ioutil.ReadFile("./fixtures/documents/details.json")
 
 	docId := "msFYActMfJHqNTKH8YSvF1"
 	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/%s/details", DOCUMENT_API_ENDPOINT, docId),
-		httpmock.NewStringResponder(200, string(file[:])))
+		func(req *http.Request) (*http.Response, error) {
+			a := assert.New(t)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
+			return httpmock.NewStringResponse(200, string(file[:])), nil
+		})
 
 	details, err := GetDocumentDetails(docId)
 	if err != nil {
@@ -186,8 +196,145 @@ func TestGetDocumentDetails(t *testing.T) {
 	a.Contains(details.Tags, "test tag")
 	a.Contains(details.Tags, "sales")
 	a.Contains(details.Tags, "support")
+}
 
-	/**
+func TestGetDocumentStatus(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	setTestToken()
 
-	 */
+	file, _ := ioutil.ReadFile("./fixtures/documents/status.json")
+
+	docId := "msFYActMfJHqNTKH8YSvF1"
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/%s", DOCUMENT_API_ENDPOINT, docId),
+		func(req *http.Request) (*http.Response, error) {
+			a := assert.New(t)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
+			return httpmock.NewStringResponse(200, string(file[:])), nil
+		})
+
+	status, err := GetDocumentStatus(docId)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	a := assert.New(t)
+	a.Equal(docId, status.UUID)
+	a.Equal("Sample Document", status.Name)
+	a.Equal("document.viewed", status.Status)
+	a.Equal("2014-10-06T08:42:13.836022Z", status.DateCreated)
+	a.Equal("2016-03-04T02:21:13.963750Z", status.DateModified)
+}
+
+func TestSendDocument(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	setTestToken()
+
+	file, _ := ioutil.ReadFile("./fixtures/documents/send.json")
+
+	docId := "msFYActMfJHqNTKH8YSvF1"
+	msg := "Test message"
+	silent := true
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/%s/send", DOCUMENT_API_ENDPOINT, docId),
+		func(req *http.Request) (*http.Response, error) {
+			body, err := ioutil.ReadAll(req.Body)
+			if err != nil {
+				t.Error(err.Error())
+			}
+
+			bodyStr := string(body[:])
+			a := assert.New(t)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
+			a.True(strings.Contains(bodyStr, fmt.Sprintf("\"message\":\"%s\"", msg)))
+			a.True(strings.Contains(bodyStr, fmt.Sprintf("\"silent\":%t", silent)))
+
+			resp := httpmock.NewStringResponse(200, string(file[:]))
+			return resp, nil
+		})
+
+	status, err := SendDocument(docId, msg, silent)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	a := assert.New(t)
+	a.Equal(docId, status.Id)
+	a.Equal("Sample Document", status.Name)
+	a.Equal("document.draft", status.Status)
+	a.Equal("2014-10-06T08:42:13.836022Z", status.DateCreated)
+	a.Equal("2016-03-04T02:21:13.963750Z", status.DateModified)
+}
+
+func TestShareDocument(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	setTestToken()
+
+	file, _ := ioutil.ReadFile("./fixtures/documents/share.json")
+
+	docId := "msFYActMfJHqNTKH8YSvF1"
+	recipient := "test@test.com"
+	lifetime := 300
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/%s/session", DOCUMENT_API_ENDPOINT, docId),
+		func(req *http.Request) (*http.Response, error) {
+			body, err := ioutil.ReadAll(req.Body)
+			if err != nil {
+				t.Error(err.Error())
+			}
+
+			bodyStr := string(body[:])
+			a := assert.New(t)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
+			a.True(strings.Contains(bodyStr, fmt.Sprintf("\"recipient\":\"%s\"", recipient)))
+			a.True(strings.Contains(bodyStr, fmt.Sprintf("\"lifetime\":%d", lifetime)))
+
+			resp := httpmock.NewStringResponse(201, string(file[:]))
+			return resp, nil
+		})
+
+	status, err := ShareDocument(docId, recipient, lifetime)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	a := assert.New(t)
+	a.Equal("QYCPtavst3DqqBK72ZRtbF", status.Id)
+	a.Equal("2016-08-29T22:18:44.315Z", status.ExpiresAt)
+}
+
+func TestDownloadDocument(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	setTestToken()
+
+	file, _ := ioutil.ReadFile("./fixtures/documents/test.pdf")
+
+	docId := "msFYActMfJHqNTKH8YSvF1"
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/%s/download", DOCUMENT_API_ENDPOINT, docId),
+		func(req *http.Request) (*http.Response, error) {
+			a := assert.New(t)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
+
+			resp := httpmock.NewBytesResponse(200, file)
+			return resp, nil
+		})
+
+	docBytes, err := DownloadDocument(docId)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	a := assert.New(t)
+	a.Equal(file, docBytes)
+}
+
+func setTestToken() {
+	SetCredentials(Credentials{AccessToken:"test-token"})
 }

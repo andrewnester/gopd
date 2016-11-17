@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"encoding/json"
+	"strings"
 )
 
 type Response struct {
@@ -42,7 +43,7 @@ func SendRequest(method string, url string, data io.Reader, contentType string, 
 		return nil, err
 	}
 
-	if resp.Status != expectedStatus {
+	if !strings.Contains(expectedStatus, resp.Status) {
 		var respErr PandadocError
 		_ = json.Unmarshal(body, &respErr)
 		respErr.Detail = string(body[:])

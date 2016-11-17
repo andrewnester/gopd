@@ -1,12 +1,14 @@
 package gopd
 
 type Recipient struct {
+	Id            string `json:"id,omitempty"`
 	Email         string `json:"email"`
 	FirstName     string `json:"first_name"`
 	LastName      string `json:"last_name"`
 	Role          string `json:"role,omitempty"`
 	RecipientType string `json:"recipient_type,omitempty"`
-	HasCompleted  bool `json:"has_completed"`
+	HasCompleted  bool `json:"has_completed,omitempty"`
+	Type          string `json:"type,omitempty"`
 }
 
 type Token struct {
@@ -46,7 +48,7 @@ type SectionRow struct {
 type Section struct {
 	Title   string `json:"title"`
 	Default bool `json:"default"`
-	Rows    []SectionRow `json:"rows"`
+	Rows    []SectionRow `json:"rows,omitempty"`
 }
 
 type PricingTable struct {
@@ -88,13 +90,12 @@ type PricingTableItem struct {
 	CustomColumns map[string]string `json:"custom_columns"`
 	Discount      float32 `json:"discount"`
 	Subtotal      float32 `json:"subtotal"`
-	Tags          map[string]string `json:"tags"`
 }
 
 type DocumentPricingTable struct {
-	Id                string `json:"id"`
-	Name              string `json:"id"`
-	Total             string `json:"id"`
+	Id                int `json:"id"`
+	Name              string `json:"name"`
+	Total             float32 `json:"total"`
 	IsIncludedInTotal bool `json:"is_included_in_total"`
 	Summary           PricingTableSummary `json:"summary"`
 	Items             []PricingTableItem `json:"items"`
@@ -105,18 +106,19 @@ type Pricing struct {
 }
 
 type Document struct {
-	Id            string `json:"id"`
-	Name          string `json:"name"`
-	DateCreated   string `json:"date_created"`
-	DateModified  string `json:"date_modified"`
-	Status        string `json:"status"`
-	CreatedBy     User `json:"created_by"`
-	Recipients    []Recipient `json:"recipients"`
-	SentBy        User `json:"sent_by"`
-	Metadata      map[string]string `json:"metadata,omitempty"`
-	Tokens        []Token `json:"tokens,omitempty"`
-	Fields        []DocumentField `json:"fields,omitempty"`
-	PricingTables []PricingTable `json:"pricing_tables,omitempty"`
+	Id           string `json:"id"`
+	Name         string `json:"name"`
+	DateCreated  string `json:"date_created"`
+	DateModified string `json:"date_modified"`
+	Status       string `json:"status"`
+	CreatedBy    User `json:"created_by"`
+	Recipients   []Recipient `json:"recipients"`
+	SentBy       User `json:"sent_by"`
+	Metadata     map[string]string `json:"metadata,omitempty"`
+	Tokens       []Token `json:"tokens,omitempty"`
+	Fields       []DocumentField `json:"fields,omitempty"`
+	Pricing      Pricing `json:"pricing,omitempty"`
+	Tags         []string `json:"tags"`
 }
 
 type DocumentStatus struct {

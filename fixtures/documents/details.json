@@ -60,7 +60,7 @@
   "pricing": {
     "tables": [
       {
-        "id": 82307036,
+        "id": "82307036",
         "name": "PricingTable1",
         "is_included_in_total": true,
         "summary": {

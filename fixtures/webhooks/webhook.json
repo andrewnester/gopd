@@ -1,0 +1,111 @@
+[
+  {
+    "event": "recipient_completed",
+    "data": {
+      "id": "msFYActMfJHqNTKH8YSvF1",
+      "name": "Sample Document",
+      "status": "document.draft",
+      "date_created": "2014-10-06T08:42:13.836022Z",
+      "date_modified": "2016-03-04T02:21:13.963750Z",
+      "action_date": "2016-09-02T22:26:52.227554",
+      "action_by": {
+        "id": "FyXaS4SlT2FY7uLPqKD9f2",
+        "email": "john@appleseed.com",
+        "first_name": "John",
+        "last_name": "Appleseed"
+      },
+      "created_by": {
+        "id": "FyXaS4SlT2FY7uLPqKD9f2",
+        "email": "john@appleseed.com",
+        "first_name": "John",
+        "last_name": "Appleseed",
+        "avatar": "https://pd-live-media.s3.amazonaws.com/users/FyXaS4SlT2FY7uLPqKD9f2/avatar.jpg"
+      },
+      "recipients": [
+        {
+          "id": "FyXaS4SlT2FY7uLPqKD9f2",
+          "email": "john@appleseed.com",
+          "first_name": "John",
+          "last_name": "Appleseed",
+          "role": "signer",
+          "recipient_type": "Signer",
+          "has_completed": true
+        }
+      ],
+      "sent_by": {
+        "id": "FyXaS4SlT2FY7uLPqKD9f2",
+        "email": "john@appleseed.com",
+        "first_name": "John",
+        "last_name": "Appleseed",
+        "avatar": "https://pd-live-media.s3.amazonaws.com/users/FyXaS4SlT2FY7uLPqKD9f2/avatar.jpg"
+      },
+      "metadata": {
+        "salesforce_opp_id": "123456",
+        "my_favorite_pet": "Panda"
+      },
+      "tokens": [
+        {
+          "name": "Favorite Animal",
+          "value": "Panda"
+        }
+      ],
+      "fields": [
+        {
+          "uuid": "YcLBNUKcx45UFxAK3NjLIH",
+          "name": "Textfield",
+          "title": "Favorite Animal",
+          "value": "Panda",
+          "assigned_to": {
+            "id": "FyXaS4SlT2FY7uLPqKD9f2",
+            "email": "john@appleseed.com",
+            "first_name": "John",
+            "last_name": "Appleseed",
+            "role": "Signer",
+            "recipient_type": "signer",
+            "has_completed": true,
+            "type": "recipient"
+          }
+        }
+      ],
+      "pricing": {
+        "tables": [
+          {
+            "id": 82307036,
+            "name": "PricingTable1",
+            "is_included_in_total": true,
+            "summary": {
+              "discount": 10,
+              "tax": 0,
+              "total": 60,
+              "subtotal": 60
+            },
+            "items": [
+              {
+                "id": "4ElJ4FEsG4PHAVNPR5qoo9",
+                "qty": 1,
+                "name": "Toy Panda",
+                "cost": "25",
+                "price": "53",
+                "description": "Buy a Panda",
+                "custom_fields": {
+                  "sampleField": "Sample Field"
+                },
+                "custom_columns": {
+                  "sampleColumn": "Sample Column"
+                },
+                "discount": 10,
+                "subtotal": 60
+              }
+            ],
+            "total": 60
+          }
+        ]
+      },
+      "tags": [
+        "test tag",
+        "sales",
+        "support"
+      ]
+    }
+  }
+]

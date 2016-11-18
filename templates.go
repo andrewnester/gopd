@@ -9,7 +9,10 @@ const TEMPLATE_API_ENDPOINT = "https://api.pandadoc.com/public/v1/templates"
 
 func GetTemplateList(params ...int) (*TemplateList, error) {
 	if len(params) > 1 {
-		panic("GetTemplateList expected 0 or 1 argument. You can pass only page number to GetTemplateList")
+		return nil, PandadocError{
+			Type:"invalid_function_call",
+			Detail:"GetTemplateList expected 0 or 1 argument. You can pass only page number to GetTemplateList",
+		}
 	}
 
 	page := 1

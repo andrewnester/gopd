@@ -161,3 +161,102 @@ func TestGetTemplateDetails(t *testing.T) {
 	a.Contains(details.Tags, "sales")
 	a.Contains(details.Tags, "support")
 }
+
+func TestGetTemplateList_WrongCall(t *testing.T) {
+	list, err := GetTemplateList(1, 2)
+
+	a := assert.New(t)
+	a.NotNil(err)
+	a.Nil(list)
+	a.Equal("invalid_function_call", err.(PandadocError).Type)
+}
+
+func TestGetTemplateDetails_WrongData(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	setTestToken()
+
+	file := []byte("some-wrong-url-data")
+
+	templateId := "UgNqHrtsGFqTSk8wtdzqPM"
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/%s/details", TEMPLATE_API_ENDPOINT, templateId),
+		func(req *http.Request) (*http.Response, error) {
+			a := assert.New(t)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
+			return httpmock.NewStringResponse(200, string(file[:])), nil
+		})
+
+	list, err := GetTemplateDetails(templateId)
+	a := assert.New(t)
+	a.NotNil(err)
+	a.Nil(list)
+}
+
+func TestGetTemplateDetails_RequestFailed(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	setTestToken()
+
+	file := []byte("{\"type\": \"some_type\"}")
+
+	templateId := "UgNqHrtsGFqTSk8wtdzqPM"
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/%s/details", TEMPLATE_API_ENDPOINT, templateId),
+		func(req *http.Request) (*http.Response, error) {
+			a := assert.New(t)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
+			return httpmock.NewStringResponse(400, string(file[:])), nil
+		})
+
+	list, err := GetTemplateDetails(templateId)
+	a := assert.New(t)
+	a.NotNil(err)
+	a.Nil(list)
+
+	a.Equal("some_type", err.(PandadocError).Type)
+}
+
+func TestGetTemplateList_WrongData(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	setTestToken()
+
+	file := []byte("some-wrong-url-data")
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s?page=1", TEMPLATE_API_ENDPOINT),
+		func(req *http.Request) (*http.Response, error) {
+			a := assert.New(t)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
+			return httpmock.NewStringResponse(200, string(file[:])), nil
+		})
+
+	list, err := GetTemplateList()
+	a := assert.New(t)
+	a.NotNil(err)
+	a.Nil(list)
+}
+
+func TestGetTemplateList_RequestFailed(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	setTestToken()
+
+	file := []byte("{\"type\": \"some_type\"}")
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s?page=1", TEMPLATE_API_ENDPOINT),
+		func(req *http.Request) (*http.Response, error) {
+			a := assert.New(t)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
+			return httpmock.NewStringResponse(400, string(file[:])), nil
+		})
+
+	list, err := GetTemplateList()
+	a := assert.New(t)
+	a.NotNil(err)
+	a.Nil(list)
+
+	a.Equal("some_type", err.(PandadocError).Type)
+}

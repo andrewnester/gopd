@@ -89,7 +89,7 @@ func TestWebHookData_FromRequest(t *testing.T) {
 
 	a.Len(tables, 1)
 	table := wh.Data.Pricing.Tables[0]
-	a.Equal(82307036, table.Id)
+	a.Equal("82307036", table.Id)
 	a.Equal("PricingTable1", table.Name)
 	a.Equal(true, table.IsIncludedInTotal)
 	a.Equal(float32(10), table.Summary.Discount)
@@ -103,8 +103,8 @@ func TestWebHookData_FromRequest(t *testing.T) {
 	a.Equal("4ElJ4FEsG4PHAVNPR5qoo9", item.Id)
 	a.Equal(1, item.Qty)
 	a.Equal("Toy Panda", item.Name)
-	a.Equal("25", item.Cost)
-	a.Equal("53", item.Price)
+	a.Equal(float32(25), item.Cost)
+	a.Equal(float32(53), item.Price)
 	a.Equal("Buy a Panda", item.Description)
 
 	a.Len(item.CustomFields, 1)

@@ -70,14 +70,14 @@
       "pricing": {
         "tables": [
           {
-            "id": 82307036,
+            "id": "82307036",
             "name": "PricingTable1",
             "is_included_in_total": true,
             "summary": {
-              "discount": 10,
-              "tax": 0,
-              "total": 60,
-              "subtotal": 60
+              "discount": "10",
+              "tax": "0",
+              "total": "60",
+              "subtotal": "60"
             },
             "items": [
               {
@@ -93,11 +93,11 @@
                 "custom_columns": {
                   "sampleColumn": "Sample Column"
                 },
-                "discount": 10,
-                "subtotal": 60
+                "discount": "10",
+                "subtotal": "60"
               }
             ],
-            "total": 60
+            "total": "60"
           }
         ]
       },

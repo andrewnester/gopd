@@ -2,7 +2,7 @@
 
 See API reference here: https://developers.pandadoc.com
 
-[![Build Status](https://travis-ci.org/andrewnester/gopd.svg?branch=master)](https://travis-ci.org/andrewnester/gopd)
+[![Build Status](https://travis-ci.org/andrewnester/gopd.svg?branch=master)](https://travis-ci.org/andrewnester/gopd) [![Coverage Status](https://coveralls.io/repos/github/andrewnester/gopd/badge.svg)](https://coveralls.io/github/andrewnester/gopd)
 
 ## Examples
 ### Authenticate

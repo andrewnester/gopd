@@ -10,7 +10,60 @@ import (
 )
 
 func TestGetTemplateList(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	setTestToken()
 
+	file, _ := ioutil.ReadFile("./fixtures/templates/list.json")
+	page := 10
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s?page=%d", TEMPLATE_API_ENDPOINT, page),
+		func(req *http.Request) (*http.Response, error) {
+			a := assert.New(t)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
+			return httpmock.NewStringResponse(200, string(file[:])), nil
+		})
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s?page=1", TEMPLATE_API_ENDPOINT),
+		func(req *http.Request) (*http.Response, error) {
+			a := assert.New(t)
+			a.Equal("Bearer test-token", req.Header.Get("Authorization"))
+			a.Equal("application/json", req.Header.Get("Content-Type"))
+			return httpmock.NewStringResponse(200, string(file[:])), nil
+		})
+
+	listData, err := GetTemplateList(page)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	a := assert.New(t)
+	a.Equal(12, listData.Count)
+	a.Equal("https://api.pandadoc.com/public/v1/documents?page=2", listData.Next)
+	a.Equal("", listData.Previous)
+	a.Len(listData.Results, 1)
+	result := listData.Results[0]
+
+	a.Equal("UgNqHrtsGFqTSk8wtdzqPM", result.Id)
+	a.Equal("Sample Template", result.Name)
+	a.Equal("2014-10-06T08:42:13.836022Z", result.DateCreated)
+	a.Equal("2016-03-04T02:21:13.963750Z", result.DateModified)
+
+	listData, err = GetTemplateList()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	a.Equal(12, listData.Count)
+	a.Equal("https://api.pandadoc.com/public/v1/documents?page=2", listData.Next)
+	a.Equal("", listData.Previous)
+	a.Len(listData.Results, 1)
+	result = listData.Results[0]
+
+	a.Equal("UgNqHrtsGFqTSk8wtdzqPM", result.Id)
+	a.Equal("Sample Template", result.Name)
+	a.Equal("2014-10-06T08:42:13.836022Z", result.DateCreated)
+	a.Equal("2016-03-04T02:21:13.963750Z", result.DateModified)
 }
 
 func TestGetTemplateDetails(t *testing.T) {

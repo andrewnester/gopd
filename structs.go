@@ -174,7 +174,7 @@ type TemplateShort struct {
 
 type TemplateList struct {
 	Count    int `json:"count"`
-	Next     string `json:"count"`
-	Previous string `json:"count"`
+	Next     string `json:"next"`
+	Previous string `json:"previous"`
 	Results  []TemplateShort `json:"results"`
 }

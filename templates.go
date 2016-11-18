@@ -7,10 +7,19 @@ import (
 
 const TEMPLATE_API_ENDPOINT = "https://api.pandadoc.com/public/v1/templates"
 
-func GetTemplateList() (*TemplateList, error) {
+func GetTemplateList(params ...int) (*TemplateList, error) {
+	if len(params) > 1 {
+		panic("GetTemplateList expected 0 or 1 argument. You can pass only page number to GetTemplateList")
+	}
+
+	page := 1
+	if len(params) == 1 {
+		page = params[0]
+	}
+
 	body, err := SendRequest(
 		"GET",
-		TEMPLATE_API_ENDPOINT,
+		fmt.Sprintf("%s?page=%d", TEMPLATE_API_ENDPOINT, page),
 		nil,
 		"application/json",
 		"200 OK",

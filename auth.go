@@ -19,8 +19,7 @@ type Auth struct {
 
 type Credentials struct {
 	AccessToken  string `json:"access_token"`
-	TokenType    string `json:"token_type"`
-	ExpiresIn    int64  `json:"expires_in"`
+	ExpiredIn    int  `json:"expired_in"`
 	RefreshToken string `json:"refresh_token"`
 	Scope        string `json:"scope"`
 }

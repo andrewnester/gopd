@@ -5,20 +5,24 @@ import (
 	"encoding/json"
 )
 
+type WebHook struct {
+	Event      string `json:"event"`
+	Data WebHookData `json:"data"`
+}
+
 type WebHookData struct {
 	Document
-	Event      string `json:"event"`
 	ActionDate string `json:"action_date"`
 	ActionBy   User `json:"action_by"`
 }
 
-func (w *WebHookData) FromRequest(r *http.Request) (*WebHookData, error) {
+func (w *WebHookData) FromRequest(r *http.Request) ([]WebHook, error) {
 	decoder := json.NewDecoder(r.Body)
-	var wh WebHookData
-	err := decoder.Decode(&wh)
+	var whs []WebHook
+	err := decoder.Decode(&whs)
 	if err != nil {
 		return nil, err
 	}
 	defer r.Body.Close()
-	return &wh, nil
+	return whs, nil
 }

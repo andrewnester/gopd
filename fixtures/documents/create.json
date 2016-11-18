@@ -1,0 +1,58 @@
+{
+  "name": "From API",
+  "template_uuid": "nkpMcUE75tBo6xdBbPXUPJ",
+  "recipients": [
+    {
+      "email": "andrew.nester.dev@gmail.com",
+      "first_name": "Andrew",
+      "last_name": "Nester",
+      "role": "Signer"
+    },
+    {
+      "email": "andrew.nester.dev2@gmail.com",
+      "first_name": "Andrew2",
+      "last_name": "Nester2"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "token1",
+      "value": "token1"
+    },
+    {
+      "name": "token12",
+      "value": "token2"
+    }
+  ],
+  "fields": [
+    {
+      "field_name": {
+        "value": "fieldName1"
+      }
+    },
+    {
+      "field_name": {
+        "value": "fieldName2"
+      }
+    }
+  ],
+  "metadata": {
+    "some_field": "some_value",
+    "some_field2": "some_value2"
+  },
+  "pricing_tables": [
+    {
+      "name": "pricing1",
+      "sections": [
+        {
+          "title": "section1",
+          "default": true
+        },
+        {
+          "title": "section2",
+          "default": false
+        }
+      ]
+    }
+  ]
+}

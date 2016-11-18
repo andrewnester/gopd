@@ -73,29 +73,29 @@ type DocumentField struct {
 }
 
 type PricingTableSummary struct {
-	Discount float32 `json:"discount"`
-	Tax      float32 `json:"tax"`
-	Total    float32 `json:"total"`
-	Subtotal float32 `json:"subtotal"`
+	Discount float32 `json:"discount,string"`
+	Tax      float32 `json:"tax,string"`
+	Total    float32 `json:"total,string"`
+	Subtotal float32 `json:"subtotal,string"`
 }
 
 type PricingTableItem struct {
 	Id            string `json:"id"`
 	Qty           int `json:"qty"`
 	Name          string `json:"name"`
-	Cost          string `json:"cost"`
-	Price         string `json:"price"`
+	Cost          float32 `json:"cost,string"`
+	Price         float32 `json:"price,string"`
 	Description   string `json:"description"`
 	CustomFields  map[string]string `json:"custom_fields"`
 	CustomColumns map[string]string `json:"custom_columns"`
-	Discount      float32 `json:"discount"`
-	Subtotal      float32 `json:"subtotal"`
+	Discount      float32 `json:"discount,string"`
+	Subtotal      float32 `json:"subtotal,string"`
 }
 
 type DocumentPricingTable struct {
-	Id                int `json:"id"`
+	Id                string `json:"id"`
 	Name              string `json:"name"`
-	Total             float32 `json:"total"`
+	Total             float32 `json:"total,string"`
 	IsIncludedInTotal bool `json:"is_included_in_total"`
 	Summary           PricingTableSummary `json:"summary"`
 	Items             []PricingTableItem `json:"items"`

@@ -10,7 +10,7 @@ import (
 )
 
 type Response struct {
-	Id           string `json:"id"`
+	Uuid           string `json:"uuid"`
 	Status       string `json:"status"`
 	Name         string `json:"name"`
 	DateCreated  string `json:"date_created"`

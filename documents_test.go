@@ -80,7 +80,7 @@ func TestFromTemplateDocument_Create(t *testing.T) {
 
 	a := assert.New(t)
 	a.Equal(td.Name, resp.Name)
-	a.Equal("msFYActMfJHqNTKH8YSvF1", resp.Id)
+	a.Equal("msFYActMfJHqNTKH8YSvF1", resp.Uuid)
 	a.Equal("document.uploaded", resp.Status)
 	a.Equal("2014-10-06T08:42:13.836022Z", resp.DateCreated)
 	a.Equal("2016-03-04T02:21:13.963750Z", resp.DateModified)
@@ -261,7 +261,7 @@ func TestSendDocument(t *testing.T) {
 	}
 
 	a := assert.New(t)
-	a.Equal(docId, status.Id)
+	a.Equal(docId, status.Uuid)
 	a.Equal("Sample Document", status.Name)
 	a.Equal("document.draft", status.Status)
 	a.Equal("2014-10-06T08:42:13.836022Z", status.DateCreated)

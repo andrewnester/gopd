@@ -35,14 +35,14 @@ type SectionRowData struct {
 	Cost        string `json:"cost"`
 	Price       string `json:"price"`
 	Description string `json:"description"`
-	Discount    int `json:"discount"`
+	Discount    int `json:"discount,omitempty"`
 }
 
 type SectionRow struct {
 	Options       SectionRowOptions `json:"options"`
 	Data          SectionRowData `json:"data"`
-	CustomFields  map[string]string `json:"custom_fields"`
-	CustomColumns map[string]string `json:"custom_columns"`
+	CustomFields  map[string]string `json:"custom_fields,omitempty"`
+	CustomColumns map[string]string `json:"custom_columns,omitempty"`
 }
 
 type Section struct {
